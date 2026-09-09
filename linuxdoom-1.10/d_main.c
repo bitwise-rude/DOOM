@@ -41,6 +41,7 @@ static const char rcsid[] = "$Id: d_main.c,v 1.8 1997/02/03 22:45:09 b1 Exp $";
 #endif
 
 
+#include <stdint.h>
 #include "doomdef.h"
 #include "doomstat.h"
 
@@ -150,7 +151,8 @@ int 		eventtail;
 void D_PostEvent (event_t* ev)
 {
     events[eventhead] = *ev;
-    eventhead = (++eventhead)&(MAXEVENTS-1);
+    eventhead++;
+    eventhead = (eventhead)&(MAXEVENTS-1);
 }
 
 
@@ -1119,7 +1121,8 @@ void D_DoomMain (void)
 	// for statistics driver
 	extern  void*	statcopy;                            
 
-	statcopy = (void*)atoi(myargv[p+1]);
+    statcopy = (void*)(uintptr_t)strtoull(myargv[p+1], NULL, 0);
+
 	printf ("External statistics registered.\n");
     }
     

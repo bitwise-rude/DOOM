@@ -4,11 +4,11 @@
 #
 # $Log:$
 #
-CC=  gcc  # gcc or g++
+CC=  gcc # gcc or g++
 
-CFLAGS=-g -Wall -DNORMALUNIX -DLINUX # -DUSEASM 
+CFLAGS=-O2 -Wall -DNORMALUNIX -DLINUX # -DUSEASM 
 LDFLAGS=-L/usr/X11R6/lib
-LIBS=-lXext -lX11 -lnsl -lm
+LIBS=-lraylib -lX11 -lm
 
 # subdirectory for objects
 O=linux

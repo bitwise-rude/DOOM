@@ -163,13 +163,11 @@ myioctl
   int*	arg )
 {   
     int		rc;
-    extern int	errno;
     
     rc = ioctl(fd, command, arg);  
     if (rc < 0)
     {
 	fprintf(stderr, "ioctl(dsp,%d,arg) failed\n", command);
-	fprintf(stderr, "errno=%d\n", errno);
 	exit(-1);
     }
 }

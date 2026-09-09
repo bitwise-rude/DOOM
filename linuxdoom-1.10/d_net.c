@@ -27,6 +27,7 @@ static const char rcsid[] = "$Id: d_net.c,v 1.3 1997/02/03 22:01:47 b1 Exp $";
 
 
 #include "m_menu.h"
+#include <stdint.h>
 #include "i_system.h"
 #include "i_video.h"
 #include "i_net.h"
@@ -89,7 +90,7 @@ doomdata_t	reboundstore;
 //
 int NetbufferSize (void)
 {
-    return (int)&(((doomdata_t *)0)->cmds[netbuffer->numtics]); 
+    return (intptr_t)&(((doomdata_t *)0)->cmds[netbuffer->numtics]); 
 }
 
 //
@@ -107,7 +108,7 @@ unsigned NetbufferChecksum (void)
     return 0;			// byte order problems
 #endif
 
-    l = (NetbufferSize () - (int)&(((doomdata_t *)0)->retransmitfrom))/4;
+    l = (NetbufferSize () - (intptr_t)&(((doomdata_t *)0)->retransmitfrom))/4;
     for (i=0 ; i<l ; i++)
 	c += ((unsigned *)&netbuffer->retransmitfrom)[i] * (i+1);
 

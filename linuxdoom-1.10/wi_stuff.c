@@ -1512,6 +1512,7 @@ void WI_Ticker(void)
 	  S_ChangeMusic(mus_dm2int, true);
 	else
 	  S_ChangeMusic(mus_inter, true); 
+
     }
 
     WI_checkForAccelerate();
