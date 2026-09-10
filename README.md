@@ -34,7 +34,7 @@ Moreover, I have also hacked the code a bit, such that, it can compile as a 64 b
 3. Easier to port. 
 
 # Some Missing Features.
-1. Sounds : I haven't implemented it yet. If you wanna help me out, you are welcome to.
+1. Sounds : Only the `sndserver` part is done, if you wanna play sound without music you can build the sndserver library too but I wouldn't recommend it. Later, I will implment it in the same process. If you wanna help me out, you are welcome to.
 2. Mouse Control : The game is perfectly playable with keyboard though.
 
 # Contributing

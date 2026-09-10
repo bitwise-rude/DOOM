@@ -9,7 +9,7 @@
 CC=gcc
 CFLAGS=-O -DNORMALUNIX -DLINUX
 LDFLAGS=
-LIBS=-lm
+LIBS=-lraylib -lX11 -lm
 
 O=linux
 
