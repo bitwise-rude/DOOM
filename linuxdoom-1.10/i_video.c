@@ -131,5 +131,5 @@ void I_UpdateNoBlit (void){
 }
 
 void I_ReadScreen (byte* scr){
-    printf("[MEYAN] asked to read scree\n");
+    memcpy(scr, screens[0], SCREENHEIGHT*SCREENWIDTH);
 }

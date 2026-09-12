@@ -32,9 +32,10 @@ Moreover, I have also hacked the code a bit, such that, it can compile as a 64 b
 1. 64 bit compatible Code.
 2. Working Video, Keyboard and Save features.
 3. Easier to port. 
+4. Sounds Works (Not Music, see below). You can experience sound effect both using the default or the serverish-way. The standard compilation will build with the sound.
 
 # Some Missing Features.
-1. Sounds : Only the `sndserver` part is done, if you wanna play sound without music you can build the sndserver library too but I wouldn't recommend it. Later, I will implment it in the same process. If you wanna help me out, you are welcome to.
+1. Music: This version of source code doesn't contain Music's implementation as far as I know. I just found dummy functions instead of actual implementation.
 2. Mouse Control : The game is perfectly playable with keyboard though.
 
 # Contributing

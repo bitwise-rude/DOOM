@@ -34,7 +34,7 @@ rcsid[] = "$Id: i_unix.c,v 1.5 1997/02/03 22:45:10 b1 Exp $";
 #include <sys/types.h>
 
 #ifndef LINUX
-#include <sys/filio.h>
+// #include <sys/filio.h>
 #endif
 
 #include <fcntl.h>
@@ -51,9 +51,8 @@ rcsid[] = "$Id: i_unix.c,v 1.5 1997/02/03 22:45:10 b1 Exp $";
 #include "z_zone.h"
 
 #include "i_system.h"
+#include <raylib.h>
 #include "i_sound.h"
-#include "m_argv.h"
-#include "m_misc.h"
 #include "w_wad.h"
 
 #include "doomdef.h"
@@ -82,6 +81,7 @@ void I_SoundDelTimer( void );
 // synchronous mix buffer updates and asynchronous
 // audio writes. Probably redundant with gametic.
 static int flag = 0;
+static AudioStream raylib_stream;
 
 // The number of internal mixing channels,
 //  the samples calculated for each mixing step,
@@ -660,11 +660,13 @@ void I_UpdateSound( void )
 // Mixing now done synchronous, and
 //  only output be done asynchronous?
 //
-void
-I_SubmitSound(void)
+void I_SubmitSound(void)
 {
   // Write it to DSP device.
-  write(audio_fd, mixbuffer, SAMPLECOUNT*BUFMUL);
+  // write(audio_fd, mixbuffer, SAMPLECOUNT*BUFMUL);
+  if (IsAudioStreamProcessed(raylib_stream)){
+  UpdateAudioStream(raylib_stream, mixbuffer, 512);
+  }
 }
 
 
@@ -720,7 +722,8 @@ void I_ShutdownSound(void)
 #endif
   
   // Cleaning up -releasing the DSP device.
-  close ( audio_fd );
+  UnloadAudioStream(raylib_stream);
+  CloseAudioDevice();
 #endif
 
   // Done.
@@ -758,35 +761,17 @@ I_InitSound()
   int i;
   
 #ifdef SNDINTR
-  fprintf( stderr, "I_SoundSetTimer: %d microsecs\n", SOUND_INTERVAL );
+  // fprintf( stderr, "I_SoundSetTimer: %d microsecs\n", SOUND_INTERVAL );
   I_SoundSetTimer( SOUND_INTERVAL );
 #endif
     
   // Secure and configure sound device first.
   fprintf( stderr, "I_InitSound: ");
   
-  audio_fd = open("/dev/dsp", O_WRONLY);
-  if (audio_fd<0)
-    fprintf(stderr, "Could not open /dev/dsp\n");
-  
-                     
-  i = 11 | (2<<16);                                           
-  myioctl(audio_fd, SNDCTL_DSP_SETFRAGMENT, &i);
-  myioctl(audio_fd, SNDCTL_DSP_RESET, 0);
-  
-  i=SAMPLERATE;
-  
-  myioctl(audio_fd, SNDCTL_DSP_SPEED, &i);
-  
-  i=1;
-  myioctl(audio_fd, SNDCTL_DSP_STEREO, &i);
-  
-  myioctl(audio_fd, SNDCTL_DSP_GETFMTS, &i);
-  
-  if (i&=AFMT_S16_LE)    
-    myioctl(audio_fd, SNDCTL_DSP_SETFMT, &i);
-  else
-    fprintf(stderr, "Could not play signed 16 data\n");
+  InitAudioDevice();
+  SetAudioStreamBufferSizeDefault(512);
+  raylib_stream = LoadAudioStream(SAMPLERATE, 2*8, 2);
+  PlayAudioStream(raylib_stream);
 
   fprintf(stderr, " configured audio device\n" );
 
@@ -806,7 +791,7 @@ I_InitSound()
     {
       // Previously loaded already?
       S_sfx[i].data = S_sfx[i].link->data;
-      lengths[i] = lengths[(S_sfx[i].link - S_sfx)/sizeof(sfxinfo_t)];
+      lengths[i] = lengths[(S_sfx[i].link - S_sfx)/(sizeof(sfxinfo_t))];
     }
   }
 
